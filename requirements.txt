@@ -1,0 +1,11 @@
+SpeechRecognition
+DateTime
+wikipedia
+gTTS
+selenium
+pygame
+mutagen
+art
+requests
+beautifulsoup4
+python-dotenv
