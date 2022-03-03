@@ -13,17 +13,16 @@ from pygame import mixer #Play sound
 import pygame
 from mutagen.mp3 import MP3 #Read length of audio file
 from art import * #Make H.A.L Font
-import random
+from random import randrange
 import requests
 from dotenv import load_dotenv #To Get Access To Config File
-import asyncio
 from bs4 import BeautifulSoup as bs
 from covid import Covid #To get coivd data
 import base64 #Encode text in base64
 import platform #To Find OS
-import urllib.request #To find version number
-import calendar #To show calendar
 import datetime
+from time import sleep
+from random import randint
 
 load_dotenv()
 os_name = platform.system()
@@ -91,7 +90,7 @@ def jokes():
                 "What kind of shoes do ninjas wear? Sneakers!",
                 "How does a penguin build its house? Igloos it together."
                 ][
-        random.randrange(61)]
+        randrange(61)]
     return response
 
 def quote():
@@ -123,7 +122,7 @@ def quote():
     "Life is either a daring adventure or nothing at all. -Helen Keller",
     "You have brains in your head. You have feet in your shoes. You can steer yourself any direction you choose. -Dr. Seuss"
     ][
-        random.randrange(27)]
+        randrange(27)]
     return response    
 
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.81 Safari/537.36"
@@ -203,7 +202,7 @@ def respond(output):
     mixer.music.play()
     song = MP3(file)
     songLength = song.info.length
-    time.sleep(songLength)
+    sleep(songLength)
     mixer.music.stop()
     pygame.quit()
     os.remove(file)
@@ -221,7 +220,7 @@ def countdown(h, m, s):
         # Prints the time left on the timer
         print(timer, end="\r")
         # Delays the program one second
-        time.sleep(1)
+        sleep(1)
         # Reduces total time by one second
         total_seconds -= 1
     mixer.init()
@@ -231,15 +230,15 @@ def countdown(h, m, s):
     mixer.music.play()
     song = MP3(file)
     songLength = song.info.length
-    time.sleep(songLength)
+    sleep(songLength)
     respond("Your Timer Is At Zero")
 
 def main():
     tprint("H.A.L")
     print("HELPFUL ARTIFICIAL LISTENER")
-    print("Current Version: 2.7.5")
+    print("Current Version: 2.7.8")
     print("")
-    time.sleep(1)
+    sleep(1)
     respond("Hello, I am hal your personal desktop assistant")
         
     while(1):
@@ -264,10 +263,10 @@ def main():
             mixer.music.play()
             song = MP3(file)
             songLength = song.info.length
-            time.sleep(songLength)
+            sleep(songLength)
             break
 
-        elif text ==  "encode message":
+        elif text ==  "encode a message":
             sample_string = input("Enter Message To Encode: ")
             sample_string_bytes = sample_string.encode("ascii")
             base64_bytes = base64.b64encode(sample_string_bytes)
@@ -275,7 +274,7 @@ def main():
             print(base64_string)
             respond("Message Is Encoded")
 
-        elif text ==  "decode message":
+        elif text ==  "decode a message":
             base64_string = input("Enter string to decode: ")
             base64_bytes = base64_string.encode("ascii")  
             sample_string_bytes = base64.b64decode(base64_bytes)
@@ -308,7 +307,7 @@ def main():
                 print("Wind:", data["wind"])
                 print("Next days:")
                 for dayweather in data["next_days"]:
-                    print("="*40, dayweather["name"], "="*40)
+                    print("="*30, dayweather["name"], "="*30)
                     print("Description:", dayweather["weather"])
                     print(f"Max temperature: {dayweather['max_temp']}°F")
                     print(f"Min temperature: {dayweather['min_temp']}°F") 
@@ -336,7 +335,7 @@ def main():
                 print("Wind:", data["wind"])
                 print("Next days:")
                 for dayweather in data["next_days"]:
-                    print("="*40, dayweather["name"], "="*40)
+                    print("="*30, dayweather["name"], "="*30)
                     print("Description:", dayweather["weather"])
                     print(f"Max temperature: {dayweather['max_temp']}°C")
                     print(f"Min temperature: {dayweather['min_temp']}°C") 
@@ -392,10 +391,16 @@ def main():
         elif 'google' in text:
             webbrowser.open('https://google.com')
             respond("Google is open")
-            
+
         elif text == 'open youtube':
             webbrowser.open('https://youtube.com')
             respond("youtube is open")
+
+        elif 'youtube' in text:
+            text = text.replace("youtube", "")
+            webbrowser.open(f"https://www.youtube.com/results?search_query={text}")
+            respond(f"searching youtube for {text}")
+    
         
         elif 'amazon' in text:
             webbrowser.open("https://amazon.com")
@@ -494,7 +499,7 @@ def main():
             respond("Wordle is now open")
 
         elif 'random number' in text:
-            respond(f'your random number is {random.randint(0,1000)}')
+            respond(f'your random number is {randint(0,1000)}')
 
 
 if __name__=='__main__':
@@ -507,7 +512,7 @@ if __name__=='__main__':
         mixer.music.play()
         song = MP3(file)
         songLength = song.info.length
-        time.sleep(songLength)
+        sleep(songLength)
         main()
 
     else:
