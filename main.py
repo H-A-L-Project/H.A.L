@@ -1,8 +1,8 @@
 import re
 import speech_recognition as sr #convert speech to text
 import datetime #for fetching date and time
-import wikipedia #Search Wikipedia for data
-import webbrowser #Search Web
+from wikipedia import summary #Search Wikipedia for data
+from webbrowser import open  #Search Web
 from gtts import gTTS # google text to speech
 import os # to save/open files 
 from selenium import webdriver # to control browser operations
@@ -14,18 +14,21 @@ import pygame
 from mutagen.mp3 import MP3 #Read length of audio file
 from art import * #Make H.A.L Font
 from random import randrange
-import requests
+from requests import Session
 from dotenv import load_dotenv #To Get Access To Config File
 from bs4 import BeautifulSoup as bs
 from covid import Covid #To get coivd data
 import base64 #Encode text in base64
-import platform #To Find OS
 import datetime
 from time import sleep
-from random import randint
+from random import randint #Genirate random number
+from datetime import date #To Tell The Date
+from argparse import ArgumentParser #To Tell The Weather
+from requests import get #Get News
+import sys
 
+today = date.today()
 load_dotenv()
-os_name = platform.system()
 
 def jokes():
     response = ["I'm afraid for the calendar. Its days are numbered",
@@ -130,7 +133,7 @@ USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 LANGUAGE = "en-US,en;q=0.5"
 
 def get_weather_data(url):
-    session = requests.Session()
+    session = Session()
     session.headers['User-Agent'] = USER_AGENT
     session.headers['Accept-Language'] = LANGUAGE
     session.headers['Content-Language'] = LANGUAGE
@@ -185,6 +188,18 @@ def talk():
             respond("Sorry I did not hear your question, Please repeat it again.")
     return data
 
+def pause():
+    input=sr.Recognizer()
+    with sr.Microphone() as source:
+        audio=input.listen(source)
+        data=""
+        try:
+            data=input.recognize_google(audio)
+            
+        except sr.UnknownValueError:
+            pass
+    return data
+
 def respond(output):
     num=0
     print(output)
@@ -234,13 +249,6 @@ def countdown(h, m, s):
     respond("Your Timer Is At Zero")
 
 def main():
-    tprint("H.A.L")
-    print("HELPFUL ARTIFICIAL LISTENER")
-    print("Current Version: 2.7.8")
-    print("")
-    sleep(1)
-    respond("Hello, I am hal your personal desktop assistant")
-        
     while(1):
         respond("How can I help you?")
         print("Listening...")
@@ -251,7 +259,7 @@ def main():
 
         if 'search amazon' in text:
             text = text.replace("search amazon", "")
-            webbrowser.open(f"https://www.amazon.com/s?k={text}")
+            open(f"https://www.amazon.com/s?k={text}")
             respond(f"Searching amazon for {text}")
             
         elif "stop" in str(text) or "exit" in str(text) or "bye" in str(text) or "cancel" in str(text):
@@ -264,7 +272,7 @@ def main():
             song = MP3(file)
             songLength = song.info.length
             sleep(songLength)
-            break
+            sys.exit()
 
         elif text ==  "encode a message":
             sample_string = input("Enter Message To Encode: ")
@@ -286,8 +294,7 @@ def main():
             token = os.environ.get("cellOrFar")
             if token == "F" or "f":
                 URL = "https://www.google.com/search?lr=lang_en&ie=UTF-8&q=weather"
-                import argparse
-                parser = argparse.ArgumentParser()
+                parser = ArgumentParser()
                 parser.add_argument("region", nargs="?",default="")
                 # parse arguments
                 args = parser.parse_args()
@@ -300,17 +307,11 @@ def main():
                 # print data
                 print("Weather for:", data["region"])
                 print("Now:", data["dayhour"])
-                print(f"Temperature now: {data['temp_now']}°F")
-                print("Description:", data['weather_now'])
-                print("Precipitation:", data["precipitation"])
-                print("Humidity:", data["humidity"])
-                print("Wind:", data["wind"])
-                print("Next days:")
-                for dayweather in data["next_days"]:
-                    print("="*30, dayweather["name"], "="*30)
-                    print("Description:", dayweather["weather"])
-                    print(f"Max temperature: {dayweather['max_temp']}°F")
-                    print(f"Min temperature: {dayweather['min_temp']}°F") 
+                respond(f"The Current Temperature Is: {data['temp_now']}°F")
+                respond(f"Description: {data['weather_now']}")
+                respond(f"With Precipitation of: {data['precipitation']}")
+                respond(f"And Humidity Of: {data['humidity']}")
+                respond(f"With Wind Of: {data['wind']}")
 
             else:
                 URL = "https://www.google.com/search?lr=lang_en&ie=UTF-8&q=weather"
@@ -333,18 +334,12 @@ def main():
                 print("Precipitation:", data["precipitation"])
                 print("Humidity:", data["humidity"])
                 print("Wind:", data["wind"])
-                print("Next days:")
-                for dayweather in data["next_days"]:
-                    print("="*30, dayweather["name"], "="*30)
-                    print("Description:", dayweather["weather"])
-                    print(f"Max temperature: {dayweather['max_temp']}°C")
-                    print(f"Min temperature: {dayweather['min_temp']}°C") 
                 
         if 'wikipedia' in text:
             try:     
                 text = text.replace("wikipedia","" )
                 respond(f'Searching Wikipedia For {text}')
-                results = wikipedia.summary(text, sentences=4)
+                results = summary(text, sentences=4)
                 respond("According to Wikipedia")
                 respond(results)
 
@@ -365,45 +360,45 @@ def main():
             token = os.environ.get("24hourclock")
 
             if token == 'False':
-                strTime=datetime.datetime.now().strftime("%I:%M:%S %p")
+                strTime=datetime.datetime.now().strftime("%I:%M %p")
                 respond(f"the time is {strTime}")
 
             else:
-                strTime=datetime.datetime.now().strftime("%H:%M:%S")
+                strTime=datetime.datetime.now().strftime("%H:%M")
                 respond(f"the time is {strTime}")
 
         elif 'bestbuy' in text:
             text = text.replace("bestbuy", "")
-            webbrowser.open(f"https://www.bestbuy.com/site/searchpage.jsp?st={text}")
+            open(f"https://www.bestbuy.com/site/searchpage.jsp?st={text}")
         
         elif 'search' in text:
             token = os.environ.get("UseGoogle")
             if token == 'True':
                 text = text.replace("search","")
-                webbrowser.open(f'https://www.google.com/search?q={text}')
+                open(f'https://www.google.com/search?q={text}')
                 respond(f"Searching Google For {text}")
             
             else:
                 text = text.replace("search","")
-                webbrowser.open(f'https://duckduckgo.com/?q={text}')
+                open(f'https://duckduckgo.com/?q={text}')
                 respond(f"Searching DuckDuckGo For {text}")
             
         elif 'google' in text:
-            webbrowser.open('https://google.com')
+            open('https://google.com')
             respond("Google is open")
 
         elif text == 'open youtube':
-            webbrowser.open('https://youtube.com')
+            open('https://youtube.com')
             respond("youtube is open")
 
         elif 'youtube' in text:
             text = text.replace("youtube", "")
-            webbrowser.open(f"https://www.youtube.com/results?search_query={text}")
+            open(f"https://www.youtube.com/results?search_query={text}")
             respond(f"searching youtube for {text}")
     
         
         elif 'amazon' in text:
-            webbrowser.open("https://amazon.com")
+            open("https://amazon.com")
             respond('amazon is open')
 
         elif 'visual studio' in text:
@@ -413,19 +408,31 @@ def main():
         elif ' open music' in text:
             token = os.environ.get("UseSpotify")
             if token == 'True':
-                webbrowser.open("https://open.spotify.com/")
+                open("https://open.spotify.com/")
                 respond("Music is open")
             else:
-                webbrowser.open('https://music.amazon.com/?')
+                open('https://music.amazon.com/?')
                 respond('Music is open')
 
         elif 'hbo' in text:
-            webbrowser.open('https://play.hbomax.com/page/urn:hbo:page:home')
+            open('https://play.hbomax.com/page/urn:hbo:page:home')
             respond('HBO Is Open')
         
         elif 'pause' in text:
             respond('I Am Now Paused')
-            input("Enter To Continue: ")
+            print("Waiting to be unpaused...")
+            while True:
+                text2=pause().lower()
+
+                if 'unpause' in text2:
+                    respond('I am now unpaused')
+                    main()
+            
+                if text2==0:
+                    pass
+
+                else:
+                    pass
 
         elif 'joke' in text:
             respond(jokes())
@@ -434,11 +441,11 @@ def main():
             respond(quote())
 
         elif 'netflix' in text:
-            webbrowser.open("https://www.netflix.com/browse")
+            open("https://www.netflix.com/browse")
             respond("Netflix Is Open")
 
         elif 'covid test' in text:
-            webbrowser.open("https://www.cvs.com/minuteclinic/covid-19-testing")
+            open("https://www.cvs.com/minuteclinic/covid-19-testing")
             respond("Remember to stay safe")
 
         elif 'command prompt' in text:
@@ -450,56 +457,84 @@ def main():
             respond("python is open")
 
         elif 'news' in text:
-            main_url = "https://newsapi.org/v2/top-headlines?country=us&apiKey=00cb4bc87f5241d3bcff3ff33e28db27"
-            news=requests.get(main_url).json()
-            article = news['articles']
+            token = os.environ.get("news-api-key")
 
-            news_article = []
-            for arti in article:
-                news_article.append(arti['title'])
-            
-            respond('Here Are The First 10 Major News Head Lines')
+            if token == "":
+                respond("To get access to the news You need to Make a new account At newsapi.org and then put the api key into the .env file")
 
-            for i in range(10):
-                print(i+1, news_article[i])
+            else:
+                main_url = f"https://newsapi.org/v2/top-headlines?country=us&apiKey={token}"
+                news=get(main_url).json()
+                article = news['articles']
+
+                news_article = []
+                for arti in article:
+                    news_article.append(arti['title'])
+                
+                respond('Here Are The First 10 Major News Head Lines')
+
+                for i in range(10):
+                    print(i+1, news_article[i])
+
+                respond("Would you like Me To Read You The First Head Line?")
+
+                while True:
+                    text2=pause().lower()
+
+                    if 'yes' in text2:
+                        respond('ok, reading the top head line')
+                        respond(f"{news_article[1]}")
+                        main()
+
+                    elif 'no' in text2:
+                        respond('ok')
+                        main()
+                
+                    if text2==0:
+                        pass
+
 
         elif 'good morning' in text:
             respond('Good Morning')
 
         elif 'hello hal' in text:
-            respond('Hello How are you')
+            respond('Hello')
 
         elif 'recipe' in text:
             text = text.replace("recipe","")
-            webbrowser.open(f"https://www.allrecipes.com/search/results/?search={text}")
+            open(f"https://www.allrecipes.com/search/results/?search={text}")
             respond(f'Here Is a recipe for {text}')
 
         elif 'play' in text:
             token = os.environ.get("UseSpotify")
             if token == "True":
                 text = text.replace("play", "")
-                webbrowser.open(f"https://open.spotify.com/search/{text}")
+                open(f"https://open.spotify.com/search/{text}")
                 respond(f"Searching Spotify For {text}")
 
             else:
                 text = text.replace("play", "")
-                webbrowser.open(f"https://music.amazon.com/search/{text}")
+                open(f"https://music.amazon.com/search/{text}")
                 respond(f"Searching Amazon Music For {text}")
 
         elif 'sport' in text:
-            webbrowser.open("https://www.espn.com/")
+            open("https://www.espn.com/")
 
 
         if text == "update":
             respond("Updating To Latest Version")
-            webbrowser.open("https://github.com//AstroBolo/H.A.L/archive/refs/heads/main.zip")
+            open("https://github.com//AstroBolo/H.A.L/archive/refs/heads/main.zip")
 
         elif 'wordle' in text:
-            webbrowser.open("https://www.nytimes.com/games/wordle/")
+            open("https://www.nytimes.com/games/wordle/")
             respond("Wordle is now open")
 
         elif 'random number' in text:
             respond(f'your random number is {randint(0,1000)}')
+
+        elif 'date' in text:
+            date = today.strftime("%B %d, %Y")
+            respond(f'the current date is {date}')
 
 
 if __name__=='__main__':
@@ -513,7 +548,19 @@ if __name__=='__main__':
         song = MP3(file)
         songLength = song.info.length
         sleep(songLength)
+        tprint("H.A.L")
+        print("HELPFUL ARTIFICIAL LISTENER")
+        print("Current Version: 1.1.1")
+        print("")
+        sleep(1)
+        respond("Hello, I am hal your personal desktop assistant")  
         main()
 
     else:
+        tprint("H.A.L")
+        print("HELPFUL ARTIFICIAL LISTENER")
+        print("Current Version: 1.1.1")
+        print("")
+        sleep(1)
+        respond("Hello, I am hal your personal desktop assistant")
         main()
