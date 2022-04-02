@@ -7,11 +7,11 @@ HOW TO INSTALL:
 <br>install git go to <a href="https://git-scm.com/downloads">here</a>
 
 Usage:
-<br>git clone https://github.com/AstroBolo/H.A.L.git
+<br>`git clone https://github.com/AstroBolo/H.A.L.git`
 <br>install your python binary from <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio">Here</a>
-<br>cd H.A.L
-<br>pip3 install -r requirements.txt
-<br>python3 main.py
+<br>`cd H.A.L`
+<br>`pip3 install -r requirements.txt`
+<br>`python3 main.py`
 
 ![image](https://raw.githubusercontent.com/AstroBolo/H.A.L/main/image.png)
 <br>
