@@ -1,7 +1,5 @@
 H.A.L (Helpful Artificial Listener) Is a voice activated virtual assistant meant to help do simple tasks on your computer
 
-<br>
-<br>
 HOW TO INSTALL:
 <br>install python go to <a href="https://www.python.org/">here</a>
 <br>install git go to <a href="https://git-scm.com/downloads">here</a>
