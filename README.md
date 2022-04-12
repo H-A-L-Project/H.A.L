@@ -10,7 +10,7 @@ Install you version of H.A.L from <a href="https://github.com/AstroBolo/H.A.L/re
 <h1>HOW TO INSTALL FOR LINUX/MAC:</h1>
 `sudo apt-get install python3`
 <br>than install your needed wsl file form <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio">here</a>
-<br>`sudo apt-get install git`
+`sudo apt-get install git`
 <br>`sudo apt-get install python3-pip`
 than install the wsl file with pip
 <br>`pip3 install (wsl filename here)`
