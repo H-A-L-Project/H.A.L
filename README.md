@@ -1,3 +1,4 @@
+![image](https://raw.githubusercontent.com/AstroBolo/H.A.L/main/image.png)
 # H.A.L
 
 ![image](https://raw.githubusercontent.com/AstroBolo/H.A.L/main/logo.png)
