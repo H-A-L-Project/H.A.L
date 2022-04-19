@@ -9,7 +9,8 @@ Install you version of H.A.L from <a href="https://github.com/AstroBolo/H.A.L/re
 
 <h1>HOW TO INSTALL FOR UNIX:</h1>
 install your needed wsl file form <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio">here</a>
-<br>```sudo apt-get install python3
+<br>
+```sudo apt-get install python3
 <br>sudo apt-get install git
 <br>sudo apt-get install python3-pip
 <br>#then install the wsl file with pip
@@ -20,4 +21,5 @@ install your needed wsl file form <a href="https://www.lfd.uci.edu/~gohlke/pytho
 <br>cd H.A.L
 <br>pip3 install -r requirements.txt
 <br>python3 main.py```
+<br>
 to contact the creator, email him at kinectcode@gmail.com
