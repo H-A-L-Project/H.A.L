@@ -1,7 +1,7 @@
 <center>
-<br>
 ![image](https://raw.githubusercontent.com/AstroBolo/H.A.L/main/logo.png)
-<br># H.A.L
+# H.A.L
+</center>
 
 H.A.L (Helpful Artificial Listener) Is a voice activated virtual assistant meant to help do simple tasks on your computer
 
