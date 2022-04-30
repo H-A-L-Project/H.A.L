@@ -1,34 +1,45 @@
-import re
+from ensurepip import version
 import speech_recognition as sr #convert speech to text
 import datetime #for fetching date and time
 from wikipedia import summary #Search Wikipedia for data
 from webbrowser import open  #Search Web
 from gtts import gTTS # google text to speech
 import os # to save/open files 
-from selenium import webdriver # to control browser operations
-import time
 from os import environ
 environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 from pygame import mixer #Play sound
-import pygame
+from pygame import quit #To Close Audio File
 from mutagen.mp3 import MP3 #Read length of audio file
 from art import * #Make H.A.L Font
 from random import randrange
 from requests import Session
 from dotenv import load_dotenv #To Get Access To Config File
 from bs4 import BeautifulSoup as bs
-from covid import Covid #To get coivd data
 import base64 #Encode text in base64
 import datetime
+from random import choice #Flip A Coin
 from time import sleep
 from random import randint #Genirate random number
 from datetime import date #To Tell The Date
 from argparse import ArgumentParser #To Tell The Weather
 from requests import get #Get News
-import sys
+from sys import exit #To Exit
+import urllib.request
+import random
+import translators #To Translate
 
+lower = 'abcdefghijklmnopqrstuvwxyz'
+upper="ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+digit = '0123456789'
+string = lower + upper + digit
+url = "https://raw.githubusercontent.com/AstroBolo/H.A.L/main/release.txt"
 today = date.today()
+
 load_dotenv()
+file = urllib.request.urlopen(url)
+
+for line in file:
+	decoded_line = line.decode("utf-8")
 
 def jokes():
     response = ["I'm afraid for the calendar. Its days are numbered",
@@ -41,7 +52,6 @@ def jokes():
                 "If April showers bring May flowers, what do May flowers bring?" "Pilgrims.",
                 "I thought the dryer was shrinking my clothes. Turns out it was the refrigerator all along.",
                 "What do you call a factory that makes okay products?" "A satisfactory.",
-                "Dear Math, grow up and solve your own problems.",
                 "What did the janitor say when he jumped out of the closet? Supplies!",
                 "Have you heard about the chocolate record player? It sounds pretty sweet.",
                 "What did the ocean say to the beach? Nothing, it just waved.",
@@ -219,7 +229,7 @@ def respond(output):
     songLength = song.info.length
     sleep(songLength)
     mixer.music.stop()
-    pygame.quit()
+    quit()
     os.remove(file)
 
 def countdown(h, m, s):
@@ -272,7 +282,15 @@ def main():
             song = MP3(file)
             songLength = song.info.length
             sleep(songLength)
-            sys.exit()
+            exit()
+
+        elif text == 'start google':
+            open('https://google.com')
+            respond("Google is open")
+
+        elif 'start' in text:
+            a = os.system(text)
+            respond(f"{a} is now open")
 
         elif text ==  "encode a message":
             sample_string = input("Enter Message To Encode: ")
@@ -288,7 +306,7 @@ def main():
             sample_string_bytes = base64.b64decode(base64_bytes)
             message = sample_string_bytes.decode("ascii")
             print(message)
-            respond("Message Is Encoded")       
+            respond("Message Is Encoded")
 
         elif 'weather' in text:
             token = os.environ.get("cellOrFar")
@@ -313,6 +331,7 @@ def main():
                 respond(f"And Humidity Of: {data['humidity']}")
                 respond(f"With Wind Of: {data['wind']}")
 
+
             else:
                 URL = "https://www.google.com/search?lr=lang_en&ie=UTF-8&q=weather"
                 import argparse
@@ -330,16 +349,16 @@ def main():
                 print("Weather for:", data["region"])
                 print("Now:", data["dayhour"])
                 print(f"Temperature now: {data['temp_now']}°C")
-                print("Description:", data['weather_now'])
-                print("Precipitation:", data["precipitation"])
-                print("Humidity:", data["humidity"])
-                print("Wind:", data["wind"])
+                respond(f"Description: {data['weather_now']}")
+                respond(f"With Precipitation of: {data['precipitation']}")
+                respond(f"And Humidity Of: {data['humidity']}")
+                respond(f"With Wind Of: {data['wind']}")
                 
         if 'wikipedia' in text:
             try:     
                 text = text.replace("wikipedia","" )
                 respond(f'Searching Wikipedia For {text}')
-                results = summary(text, sentences=4)
+                results = summary(text, sentences=3)
                 respond("According to Wikipedia")
                 respond(results)
 
@@ -366,10 +385,6 @@ def main():
             else:
                 strTime=datetime.datetime.now().strftime("%H:%M")
                 respond(f"the time is {strTime}")
-
-        elif 'bestbuy' in text:
-            text = text.replace("bestbuy", "")
-            open(f"https://www.bestbuy.com/site/searchpage.jsp?st={text}")
         
         elif 'search' in text:
             token = os.environ.get("UseGoogle")
@@ -382,10 +397,6 @@ def main():
                 text = text.replace("search","")
                 open(f'https://duckduckgo.com/?q={text}')
                 respond(f"Searching DuckDuckGo For {text}")
-            
-        elif 'google' in text:
-            open('https://google.com')
-            respond("Google is open")
 
         elif text == 'open youtube':
             open('https://youtube.com')
@@ -448,14 +459,6 @@ def main():
             open("https://www.cvs.com/minuteclinic/covid-19-testing")
             respond("Remember to stay safe")
 
-        elif 'command prompt' in text:
-            os.system('start cmd')
-            respond("cmd is open")
-
-        elif 'python' in text:
-            os.system('start python')
-            respond("python is open")
-
         elif 'news' in text:
             token = os.environ.get("news-api-key")
 
@@ -476,14 +479,16 @@ def main():
                 for i in range(10):
                     print(i+1, news_article[i])
 
-                respond("Would you like Me To Read You The First Head Line?")
+                respond("Would you like Me To Read You The First Three Head Lines?")
 
                 while True:
+                    print("Waiting...") 
                     text2=pause().lower()
 
                     if 'yes' in text2:
-                        respond('ok, reading the top head line')
-                        respond(f"{news_article[1]}")
+                        respond('ok, reading the top three head lines')
+                        for i in range(3):
+                            respond(f"{i+1} {news_article[i]}")
                         main()
 
                     elif 'no' in text2:
@@ -519,11 +524,7 @@ def main():
 
         elif 'sport' in text:
             open("https://www.espn.com/")
-
-
-        if text == "update":
-            respond("Updating To Latest Version")
-            open("https://github.com//AstroBolo/H.A.L/archive/refs/heads/main.zip")
+            respond('esp is now open')
 
         elif 'wordle' in text:
             open("https://www.nytimes.com/games/wordle/")
@@ -536,6 +537,73 @@ def main():
             date = today.strftime("%B %d, %Y")
             respond(f'the current date is {date}')
 
+        elif text == 'flip a coin':
+            respond(f"you got {choice(['heads','tails'])}")
+
+        elif 'password' in text:
+            length = int(input('Enter the length of your password: '))
+            password="".join(random.sample(string,length))
+            respond(f'your password is: {password}')
+
+        elif 'pod bay doors' in text:
+            respond('im sorry dave, im afraid I cant do that')
+
+        elif 'translate' in text:
+            respond('what language do you want to translate from?')
+            print('listening...')
+            text2=pause().lower()
+
+            respond('what language do you want to translate to?')
+            print('listening...')
+            text3=pause().lower()
+
+            respond(f'what do you want to translate into {text3}?')
+            print('listening...')
+            text4=pause().lower()
+
+            token = os.environ.get(text2)
+            token2 = os.environ.get(text3)
+            trans=translators.google(text4,from_language=token,to_language=token2)
+            respond(f'your translation is {trans}')
+        
+            if text2==0:
+                pass
+
+            else:
+                pass
+
+
+version = '1.2.2.0'
+
+def update():
+    token = os.environ.get("HushUpdate")
+    if token == 'True':
+        main()
+
+    else:
+        if decoded_line > version:
+            respond(f"I am currently using update {version} and update {decoded_line} is out. would you like me to update?")
+            while True:
+                print('waiting...')
+                text2=pause().lower()
+
+                if 'yes' in text2:
+                    respond(f'Updating to {decoded_line}')
+                    open(f"github.com/AstroBolo/H.A.L/releases/download/{decoded_line}/H.A.L-{decoded_line}.zip")
+                    respond(f"Now Updated to {decoded_line}. I will now exit. goodbye")
+                    exit()
+
+                elif 'no' in text2:
+                    main()
+
+                if text2==0:
+                    pass
+
+                else:
+                    pass
+
+        else:
+            main()
 
 if __name__=='__main__':
     token = os.environ.get("IntroMusic")
@@ -550,17 +618,13 @@ if __name__=='__main__':
         sleep(songLength)
         tprint("H.A.L")
         print("HELPFUL ARTIFICIAL LISTENER")
-        print("Current Version: 1.1.1")
-        print("")
-        sleep(1)
-        respond("Hello, I am hal your personal desktop assistant")  
-        main()
+        print(f"Current Version: {version}")
+        respond("Hello, I am hal your personal desktop assistant")
+        update()
 
     else:
         tprint("H.A.L")
         print("HELPFUL ARTIFICIAL LISTENER")
-        print("Current Version: 1.1.1")
-        print("")
-        sleep(1)
+        print(f"Current Version: {version}")
         respond("Hello, I am hal your personal desktop assistant")
-        main()
+        update()
