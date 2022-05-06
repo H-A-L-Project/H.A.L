@@ -9,7 +9,7 @@
 Install you version of H.A.L from <a href="https://github.com/AstroBolo/H.A.L/releases">Here</a>
 
 <h1>HOW TO INSTALL FOR UNIX:</h1>
-install your needed wsl file form <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio">here</a>
+install your needed wsl file from <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio">here</a>
 <br>
 sudo apt-get install python3
 <br>sudo apt-get install git
