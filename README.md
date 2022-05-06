@@ -20,6 +20,7 @@ sudo apt-get install python3
 <br>sudo apt-get install git
 <br>git clone https://github.com/AstroBolo/H.A.L.git
 <br>cd H.A.L
+<br>git checkout {Version name here}
 <br>pip3 install -r requirements.txt
 <br>python3 main.py
 <br>
