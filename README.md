@@ -1,24 +1,24 @@
-![image](https://raw.githubusercontent.com/AstroBolo/H.A.L/main/logo.png)
+![image](https://raw.githubusercontent.com/H-A-L-Project/H.A.L/main/logo.png)
 # H.A.L
 
 <br>H.A.L (Helpful Artificial Listener) Is a voice activated virtual assistant meant to help do simple tasks on your computer
 
-![image](https://raw.githubusercontent.com/AstroBolo/H.A.L/main/image.png)
+![image](https://raw.githubusercontent.com/H-A-L-Project/H.A.L/main/image.png)
 
 <h1>HOW TO INSTALL FOR WINDOWS:</h1>
-Install you version of H.A.L from <a href="https://github.com/AstroBolo/H.A.L/releases">Here</a>
+Install you version of H.A.L from <a href="https://github.com/H-A-L-Project/H.A.L/releases">Here</a>
 
 <h1>HOW TO INSTALL FOR UNIX:</h1>
 install your needed wsl file from <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio">here</a>
 <br>
-sudo apt-get install python3
+`$ sudo apt-get install python3`
 <br>sudo apt-get install git
 <br>sudo apt-get install python3-pip
 <br>#then install the wsl file with pip
 <br>pip3 install (wsl filename here)
 <br>#then clone the git
 <br>sudo apt-get install git
-<br>git clone https://github.com/AstroBolo/H.A.L.git
+<br>git clone https://github.com/H-A-L-Project/H.A.L.git
 <br>cd H.A.L
 <br>git checkout {Version name here}
 <br>pip3 install -r requirements.txt
